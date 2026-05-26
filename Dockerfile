@@ -1,13 +1,21 @@
-# Stage 1: Build aplikasi React
+# Gunakan versi node yang lebih baru dan stabil
 FROM node:18-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --no-package-lock
+
+# Copy dulu file pendukung buat ngetes dependencies
+COPY package.json package-lock.json* ./
+
+# Coba install dependencies (Kalau gak ada package-lock, dia bakal buat otomatis)
+RUN npm install
+
+# Copy seluruh source code
 COPY . .
+
+# Build aplikasinya
 RUN npm run build
 
-# Stage 2: Jalankan aplikasi menggunakan Nginx web server
+# Stage 2: Nginx
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
