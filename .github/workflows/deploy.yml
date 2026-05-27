@@ -39,4 +39,4 @@ jobs:
         
         # Lakukan push source code & Dockerfile langsung ke remote Hugging Face Space
         # Ganti 'thesatria' di bawah dengan username Hugging Face lu jika username HF lu berbeda
-        git push --force https://ThatMyFace:$HF_TOKEN@huggingface.co/spaces/thesatria/wibe-studio main
+        git push --force https://MyMFG:$HF_TOKEN@huggingface.co/spaces/thesatria/wibe-studio main
