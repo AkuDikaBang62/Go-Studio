@@ -18,7 +18,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Menyalin hasil build dari tahap 1 ke folder HTML Nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 
 # Ekspos port 80
 EXPOSE 80
