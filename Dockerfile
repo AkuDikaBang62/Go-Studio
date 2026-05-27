@@ -1,5 +1,5 @@
 # Tahap 1: Build aplikasi React/Vite
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 
 # Salin file package.json untuk install dependencies
