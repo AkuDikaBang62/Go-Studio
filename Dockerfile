@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json ./
 
 # Gunakan npm install untuk mengunduh semua package
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Salin seluruh source code proyek
 COPY . .
