@@ -33,10 +33,7 @@ jobs:
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
-        # Konfigurasi Git untuk proses push ke Hugging Face
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
         
-        # Lakukan push source code & Dockerfile langsung ke remote Hugging Face Space
-        # Ganti 'thesatria' di bawah dengan username Hugging Face lu jika username HF lu berbeda
         git push --force https://MyMFG:$HF_TOKEN@huggingface.co/spaces/MyMFG/wibe-studio main
