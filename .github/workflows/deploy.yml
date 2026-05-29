@@ -27,7 +27,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/wibe-studio:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/go-studio:latest
 
     - name: Deploy to Hugging Face Spaces
       env:
