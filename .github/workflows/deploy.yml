@@ -36,11 +36,17 @@ jobs:
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
         
-        # Membuat file .netrc (Git otomatis baca file ini untuk login ke Hugging Face)
-        echo "machine huggingface.co" > ~/.netrc
-        echo "login MyMFG" >> ~/.netrc
-        echo "password $HF_TOKEN" >> ~/.netrc
-        chmod 600 ~/.netrc
+        echo "=== MENGECEK VALIDITAS TOKEN LANGSUNG KE HUGGING FACE ==="
+        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $HF_TOKEN" https://huggingface.co/api/whoami)
+        echo "Hasil respon server Hugging Face: $RESPONSE"
         
-        # Push langsung dengan URL bersih tanpa embel-embel username di URL
-        git push --force https://huggingface.co/spaces/MyMFG/go-studio HEAD:refs/heads/main
+        if [ "$RESPONSE" != "200" ]; then
+          echo "======================================================================="
+          echo " ❌ EROR: TOKEN DI-REJECT/DITOLAK OLEH HUGGING FACE API! "
+          echo " Karakter token di GitHub Secrets ada yang salah, typo, atau kurang. "
+          echo "======================================================================="
+          exit 1
+        fi
+        
+        echo " ✅ Token Valid! Melanjutkan push menggunakan kredensial steril..."
+        git push --force https://user:$HF_TOKEN@huggingface.co/spaces/MyMFG/go-studio HEAD:refs/heads/main
