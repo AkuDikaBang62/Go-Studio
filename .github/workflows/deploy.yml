@@ -36,8 +36,11 @@ jobs:
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
         
-        # Trik Sakti: Titipkan token ke sistem credential helper (Anti-error karakter unik)
-        git config --global credential.helper '!f() { echo username=MyMFG; echo "password=$HF_TOKEN"; }; f'
+        # Membuat file .netrc (Git otomatis baca file ini untuk login ke Hugging Face)
+        echo "machine huggingface.co" > ~/.netrc
+        echo "login MyMFG" >> ~/.netrc
+        echo "password $HF_TOKEN" >> ~/.netrc
+        chmod 600 ~/.netrc
         
-        # Push dengan URL bersih tanpa embel-embel token di dalamnya
+        # Push langsung dengan URL bersih tanpa embel-embel username di URL
         git push --force https://huggingface.co/spaces/MyMFG/go-studio HEAD:refs/heads/main
