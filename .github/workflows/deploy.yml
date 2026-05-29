@@ -29,24 +29,43 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/wibe-studio:latest
 
-    - name: Deploy to Hugging Face Spaces
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Hugging Face Hub
+      run: pip install huggingface_hub
+
+    - name: Deploy to Hugging Face Spaces via SDK
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
-        git config --global user.email "actions@github.com"
-        git config --global user.name "GitHub Actions"
+        python -c "
+        import os
+        import sys
+        from huggingface_hub import HfApi
         
-        echo "=== MENGECEK VALIDITAS TOKEN LANGSUNG KE HUGGING FACE ==="
-        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $HF_TOKEN" https://huggingface.co/api/whoami)
-        echo "Hasil respon server Hugging Face: $RESPONSE"
+        token = os.getenv('HF_TOKEN')
+        repo_id = 'MyMFG/wibe-studio'
         
-        if [ "$RESPONSE" != "200" ]; then
-          echo "======================================================================="
-          echo " ❌ EROR: TOKEN DI-REJECT/DITOLAK OLEH HUGGING FACE API! "
-          echo " Karakter token di GitHub Secrets ada yang salah, typo, atau kurang. "
-          echo "======================================================================="
-          exit 1
-        fi
-        
-        echo " ✅ Token Valid! Melanjutkan push menggunakan kredensial steril..."
-        git push --force https://user:$HF_TOKEN@huggingface.co/spaces/MyMFG/go-studio HEAD:refs/heads/main
+        print('=== MENCOBA LOGIN KE HUGGING FACE API ===')
+        try:
+            api = HfApi(token=token)
+            user_info = api.whoami()
+            print(f'✅ LOGIN SUKSES! Terdeteksi sebagai: {user_info.get(\"name\")}')
+            
+            print('\n=== MEMULAI SYNCHRONIZATION/UPLOAD FOLDER ===')
+            api.upload_folder(
+                folder_path='.',
+                repo_id=repo_id,
+                repo_type='space',
+                ignore_patterns=['.git*', '.github*']
+            )
+            print('✅ DEPLOYMENT KE SPACES BERHASIL TOTAL!')
+            
+        except Exception as e:
+            print('\n❌ TERJADI EROR PADA SISTEM API:')
+            print(str(e))
+            sys.exit(1)
+        "
