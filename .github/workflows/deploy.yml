@@ -27,7 +27,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/go-studio:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/wibe-studio:latest
 
     - name: Deploy to Hugging Face Spaces
       env:
@@ -36,5 +36,8 @@ jobs:
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
         
-        # Metode Sakti: Inject token langsung via Authorization Bearer Header (Bypass Username)
-        git -c http.extraheader="Authorization: Bearer $HF_TOKEN" push --force https://huggingface.co/spaces/MyMFG/go-studio HEAD:refs/heads/main
+        # Trik Sakti: Titipkan token ke sistem credential helper (Anti-error karakter unik)
+        git config --global credential.helper '!f() { echo username=MyMFG; echo "password=$HF_TOKEN"; }; f'
+        
+        # Push dengan URL bersih tanpa embel-embel token di dalamnya
+        git push --force https://huggingface.co/spaces/MyMFG/go-studio HEAD:refs/heads/main
