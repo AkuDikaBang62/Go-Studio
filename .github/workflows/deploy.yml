@@ -37,7 +37,7 @@ jobs:
     - name: Install Hugging Face Hub
       run: pip install huggingface_hub
 
-    - name: Deploy to Hugging Face Spaces via SDK
+    - name: Run Hugging Face Diagnostics & Deploy
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
@@ -47,25 +47,52 @@ jobs:
         from huggingface_hub import HfApi
         
         token = os.getenv('HF_TOKEN')
-        repo_id = 'MyMFG/wibe-studio'
-        
-        print('=== MENCOBA LOGIN KE HUGGING FACE API ===')
-        try:
-            api = HfApi(token=token)
-            user_info = api.whoami()
-            print(f'✅ LOGIN SUKSES! Terdeteksi sebagai: {user_info.get(\"name\")}')
+        if not token:
+            print('#'*70)
+            print('❌ EROR KRITIKAL: Secrets.HF_TOKEN KOSONG ATAU TIDAK TERBACA DI GITHUB!')
+            print('Silakan cek kembali apakah Anda mengetik nama secret-nya HF_TOKEN (bukan yang lain).')
+            print('#'*70)
+            sys.exit(1)
             
-            print('\n=== MEMULAI SYNCHRONIZATION/UPLOAD FOLDER ===')
+        api = HfApi(token=token)
+        
+        print('=== MEMULAI MODE DETEKTIF ===')
+        try:
+            user_info = api.whoami()
+            username = user_info.get('name')
+            print(f'✅ KONEKSI SUKSES!')
+            print(f'-> Username/Organisasi asli yang terbaca token: {username}')
+            
+            print('\n=== MEMINDAI REPOSITORI SPACES ANDA ===')
+            spaces = list(api.list_spaces(author=username))
+            
+            exact_space_id = None
+            print('Daftar nama Space yang berhak diakses oleh token ini:')
+            for space in spaces:
+                print(f' - {space.id}')
+                if 'wibe-studio' in space.id.lower():
+                    exact_space_id = space.id
+            
+            if not exact_space_id:
+                print('\n' + '!'*70)
+                print('❌ EROR: Space dengan nama wibe-studio TIDAK ADA di bawah akun ini!')
+                print('Silakan cek list di atas, nama Space lu yang tertulis di Hugging Face apa?')
+                print('!'*70)
+                sys.exit(1)
+                
+            print(f'\n🎯 Target ditemukan: {exact_space_id}')
+            print('=== MEMULAI PROSES UPLOAD FOLDER ===')
+            
             api.upload_folder(
                 folder_path='.',
-                repo_id=repo_id,
+                repo_id=exact_space_id,
                 repo_type='space',
                 ignore_patterns=['.git*', '.github*']
             )
-            print('✅ DEPLOYMENT KE SPACES BERHASIL TOTAL!')
+            print('✅ BOOM! DEPLOYMENT SAKSES TOTAL!')
             
         except Exception as e:
-            print('\n❌ TERJADI EROR PADA SISTEM API:')
+            print('\n❌ API ERROR TERDETEKSI:')
             print(str(e))
             sys.exit(1)
         "
