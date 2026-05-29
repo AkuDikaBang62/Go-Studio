@@ -27,7 +27,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/wibe-studio:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/go-studio:latest
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -70,7 +70,7 @@ jobs:
             print('Daftar nama Space yang berhak diakses oleh token ini:')
             for space in spaces:
                 print(f' - {space.id}')
-                if 'wibe-studio' in space.id.lower():
+                if 'go-studio' in space.id.lower():
                     exact_space_id = space.id
             
             if not exact_space_id:
