@@ -1,3 +1,15 @@
+---
+title: Go Studio
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 8080
+---
+
+# Go Studio
+Haii semua..
+
 # 🔥Build a Stunning Fashion Studio Website with React JS [ Locomotive Scroll + GSAP + Framer Motion ]
 
 ![GitHub stars](https://img.shields.io/github/stars/codebucks27/wibe-studio-starter-files?style=social&logo=ApacheSpark&label=Stars)&nbsp;&nbsp;
