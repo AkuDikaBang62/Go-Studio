@@ -24,3 +24,10 @@ COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+
+FROM nginx:alpine
+# Sisipkan baris ini buat ganti port 80 ke 8080 di dalam Nginx
+RUN sed -i 's/listen       80;/listen       8080;/g' /etc/nginx/conf.d/default.conf
+
+# Pastikan EXPOSE-nya juga ke 8080
+EXPOSE 8080
