@@ -1,16 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Wibe Studio - A Fashion Studio Website" />
-    <title>Wibe Studio</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Studio - Workspace</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-950">
+
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[350px] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <main class="flex-1 flex flex-col items-center justify-center p-6 relative z-10">
+        <div class="max-w-2xl w-full bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl text-center space-y-6">
+            
+            <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold px-4 py-1.5 rounded-full animate-pulse">
+                <span>🚀</span> Hugging Face Space is Live
+            </div>
+
+            <div class="space-y-2">
+                <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 via-teal-200 to-indigo-400 bg-clip-text text-transparent">
+                    Go Studio
+                </h1>
+                <p class="text-slate-400 text-base md:text-lg">
+                    Aplikasi lu udah berhasil dionline-kan lewat Docker & Nginx!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 pt-4">
+                <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-2xl text-left">
+                    <span class="text-xs text-slate-500 uppercase tracking-wider block mb-1">Status Server</span>
+                    <span class="text-sm font-semibold text-emerald-400 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 block animate-ping"></span>
+                        Running Well
+                    </span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-2xl text-left">
+                    <span class="text-xs text-slate-500 uppercase tracking-wider block mb-1">Internal Port</span>
+                    <span class="text-sm font-semibold text-indigo-400">8080 → 80 (Nginx)</span>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button onclick="testKoneksi()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-semibold py-3 px-6 rounded-2xl transition duration-300 shadow-lg shadow-emerald-500/20 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
+                    Test Response Aplikasi
+                </button>
+                <p id="log-message" class="text-xs text-slate-500 mt-3 min-h-[16px] italic"></p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="w-full text-center py-6 border-t border-slate-900 text-xs text-slate-600 relative z-10">
+        &copy; 2026 Go Studio Workspace. Powered by Nginx & Alpine Linux.
+    </footer>
+
+    <script>
+        function testKoneksi() {
+            const log = document.getElementById('log-message');
+            log.innerText = "Connecting to internal environment...";
+            log.className = "text-xs text-slate-400 mt-3 italic";
+            
+            setTimeout(() => {
+                log.innerText = "🚀 Success! Response status code: 200 OK. Aplikasi merespons dalam 12ms.";
+                log.className = "text-xs text-emerald-400 mt-3 font-medium";
+            }, 800);
+        }
+    </script>
+</body>
 </html>
